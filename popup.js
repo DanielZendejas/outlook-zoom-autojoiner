@@ -1,15 +1,23 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   innerText = "";
+  urls = request.urls;
 
   if (urls.length === 0) {
     innerText = "No Zoom URLs detected for today";
   } else {
-    for (var url of request.urls) {
-      innerText += "<a href='" + url + ">" + url + "</ a>";
+    var list = document.createElement("ul");
+    for (var url of urls) {
+      var li = document.createElement("li");
+      var link = document.createElement("a");
+      link.textContent = url;
+      link.href = url;
+      link.target = "_blank";
+      li.appendChild(link);
+      list.appendChild(li);
     }
+    document.querySelector("#urls").appendChild(list);
   }
 
-  document.querySelector("#urls").innerText = innerText;
 });
 
 chrome.tabs.query({active: true}, function(tab) {
